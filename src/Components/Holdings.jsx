@@ -7,6 +7,7 @@ let Box = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     margin-right: 15px;
+    margin-top: 20px;
 `
 let Title = styled.h1`
 `

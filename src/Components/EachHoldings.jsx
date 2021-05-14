@@ -7,7 +7,7 @@ let Box = styled.div`
     flex-direction: column;
     background: white; 
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 5px 0px;
 `
 let Quantity = styled.div`
