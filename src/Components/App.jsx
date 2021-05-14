@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import Header from "./Header";
 import CoinContext from "../Context/CoinContext";
@@ -17,7 +16,8 @@ export default function App() {
   const API =
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
 
-  let [prices, setPrices] = useState({});
+    let [prices, setPrices] = useState({});
+    let [Wallet, setWallet] = useState(1000)
 
   async function getPrices() {
     let response = await fetch(API);
@@ -28,18 +28,20 @@ export default function App() {
         (temp[el.id] = {
           name: el.name,
           current_price: el.current_price,
-          market_cap: el.market_cap_change_24h.toFixed(5),
+          market_cap: el.market_cap_change_percentage_24h.toFixed(5),
         })
     );
+    // console.log(temp)
     setPrices(temp);
     }
     
     useEffect(() => {
-        getPrices()
+        let refreshPrice = setInterval(() => getPrices(), 5000)
+        return () => clearInterval(refreshPrice)
     }, [])
 
   return (
-      <CoinContext.Provider value={{ Coin: prices, Wallet: 100, Holdings: { dogecoin: [], bitcoin: [], ethereum: []} }}>
+      <CoinContext.Provider value={{ Coin: prices, Wallet: Wallet, Holdings: { dogecoin: [], bitcoin: [], ethereum: []} }}>
       <Container>
         <Header />
       </Container>
