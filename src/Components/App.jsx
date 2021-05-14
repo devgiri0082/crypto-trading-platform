@@ -14,35 +14,40 @@ let Container = styled.div`
   padding: 30px;
 `;
 export default function App() {
-  const API =
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
+    const API =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
 
-  let [prices, setPrices] = useState({});
-
-  async function getPrices() {
-    let response = await fetch(API);
-    let data = await response.json();
-    let temp = {};
-    data.forEach(
-      (el) =>
-        (temp[el.id] = {
-          name: el.name,
-          current_price: el.current_price,
-          market_cap: el.market_cap_change_24h.toFixed(5),
-        })
-    );
-    setPrices(temp);
+    let [prices, setPrices] = useState({});
+    async function getPrices() {
+        let response = await fetch(API);
+        let data = await response.json();
+        let temp = {};
+        data.forEach(
+            (el) =>
+            (temp[el.id] = {
+                name: el.name,
+                current_price: el.current_price,
+                market_cap: el.market_cap_change_24h.toFixed(5),
+            })
+        );
+        console.log(temp);
+        setPrices(temp);
     }
-    
-    useEffect(() => {
+
+    useEffect(async () => {
         getPrices()
     }, [])
-
-  return (
-      <CoinContext.Provider value={{ Coin: prices, Wallet: 100, Holdings: { dogecoin: [], bitcoin: [], ethereum: []} }}>
-      <Container>
-        <Header />
-      </Container>
-    </CoinContext.Provider>
-  );
+    let [wallet, setWallet] = useState(100);
+    let [holding, setHolding] = useState({
+        dogecoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
+        bitcoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
+        ethereum: { quantity: 0, boughtPrice: undefined, currentPrice: undefined }
+    })
+    return (
+        <CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
+            <Container>
+                <Header />
+            </Container>
+        </CoinContext.Provider>
+    );
 }
