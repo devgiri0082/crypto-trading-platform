@@ -17,7 +17,10 @@ let Container = styled.div`
   padding: 30px;
 `;
 let Bottom = styled.div`
-    display: flex;
+    width: 60%; 
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 10px;
     
 `
 export default function App() {
