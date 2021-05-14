@@ -21,14 +21,6 @@ let Portfolio = styled(Title)`
 `
 export default function Header() {
     let contextData = useContext(CoinContext);
-    for (let coin in contextData.Coin) {
-        let values = JSON.parse(JSON.stringify(contextData.holdings[0]));
-        if (contextData.Coin[coin] !== undefined) {
-            let lowerValue = coin.toLowerCase();
-            console.log(values.lowerValue);
-
-        }
-    }
     return (
         <Heading>
             <Title>Earn some virtual money 💰</Title>

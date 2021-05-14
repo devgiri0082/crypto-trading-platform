@@ -4,6 +4,8 @@ import Header from "./Header";
 import CoinContext from "../Context/CoinContext";
 import { useState, useEffect } from "react";
 import Price from "./Price";
+import Holdings from "./Holdings";
+import Transactions from "./Transactions";
 
 let Container = styled.div`
   height: 100vh;
@@ -14,12 +16,21 @@ let Container = styled.div`
   align-items: center;
   padding: 30px;
 `;
+let Bottom = styled.div`
+    display: flex;
+    
+`
 export default function App() {
     const API =
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
 
     let [prices, setPrices] = useState({});
     let [wallet, setWallet] = useState(100);
+    let [holding, setHolding] = useState({
+        dogecoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
+        bitcoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
+        ethereum: { quantity: 0, boughtPrice: 0, currentPrice: 0 }
+    })
     async function getPrices() {
         let response = await fetch(API);
         let data = await response.json();
@@ -34,21 +45,28 @@ export default function App() {
             })
         );
         setPrices(temp);
+        let values = JSON.parse(JSON.stringify(holding));
+        for (let coin in temp) {
+            let lowerValue = coin.toLowerCase();
+            values[lowerValue].currentPrice = temp[coin].current_price;
+        }
+        setHolding(values);
     }
 
     useEffect(() => {
         getPrices()
     }, [])
-    let [holding, setHolding] = useState({
-        dogecoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
-        bitcoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
-        ethereum: { quantity: 0, boughtPrice: 0, currentPrice: 0 }
-    })
+
+
     return (
         < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
             <Container>
                 <Header />
                 <Price />
+                <Bottom>
+                    <Holdings />
+                    <Transactions />
+                </Bottom>
             </Container>
         </CoinContext.Provider >
     );
