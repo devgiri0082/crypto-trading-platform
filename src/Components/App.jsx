@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "./Header";
 import CoinContext from "../Context/CoinContext";
 import { useState, useEffect } from "react";
+import Price from "./Price";
 
 let Container = styled.div`
   height: 100vh;
@@ -47,6 +48,7 @@ export default function App() {
         < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
             <Container>
                 <Header />
+                <Price />
             </Container>
         </CoinContext.Provider >
     );
