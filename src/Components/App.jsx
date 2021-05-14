@@ -19,13 +19,6 @@ export default function App() {
 
     let [prices, setPrices] = useState({});
     let [wallet, setWallet] = useState(100);
-    let [holding, setHolding] = useState({
-        dogecoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
-        bitcoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
-        ethereum: { quantity: 0, boughtPrice: undefined, currentPrice: undefined }
-    })
-
-
     async function getPrices() {
         let response = await fetch(API);
         let data = await response.json();
@@ -35,7 +28,8 @@ export default function App() {
             (temp[el.id] = {
                 name: el.name,
                 current_price: el.current_price,
-                market_cap: el.market_cap_change_24h.toFixed(5),
+                market_cap: el.market_cap_change_percentage_24h.toFixed(5),
+                image: el.image
             })
         );
         setPrices(temp);
@@ -44,12 +38,16 @@ export default function App() {
     useEffect(() => {
         getPrices()
     }, [])
-
+    let [holding, setHolding] = useState({
+        dogecoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
+        bitcoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
+        ethereum: { quantity: 0, boughtPrice: 0, currentPrice: 0 }
+    })
     return (
-        <CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
+        < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
             <Container>
                 <Header />
             </Container>
-        </CoinContext.Provider>
+        </CoinContext.Provider >
     );
 }
