@@ -18,6 +18,14 @@ export default function App() {
         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
 
     let [prices, setPrices] = useState({});
+    let [wallet, setWallet] = useState(100);
+    let [holding, setHolding] = useState({
+        dogecoin: {},
+        bitcoin: [],
+        ethereum: []
+    })
+
+
     async function getPrices() {
         let response = await fetch(API);
         let data = await response.json();
@@ -30,21 +38,15 @@ export default function App() {
                 market_cap: el.market_cap_change_24h.toFixed(5),
             })
         );
-        console.log(temp);
         setPrices(temp);
     }
 
-    useEffect(async () => {
+    useEffect(() => {
         getPrices()
     }, [])
-    let [wallet, setWallet] = useState(100);
-    let [holding, setHolding] = useState({
-        dogecoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
-        bitcoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
-        ethereum: { quantity: 0, boughtPrice: undefined, currentPrice: undefined }
-    })
+
     return (
-        <CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
+        <CoinContext.Provider value={{ Coin: prices, Wallet: 100, Holdings: { Holding } }}>
             <Container>
                 <Header />
             </Container>
