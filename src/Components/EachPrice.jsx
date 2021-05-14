@@ -37,10 +37,17 @@ let Details = styled.div`
 `
 
 export default function EachPrice({ coinName }) {
-    let { Coin, wallet, holdings } = useContext(CoinContext)
+    let { Coin, wallet, holdings, transaction } = useContext(CoinContext)
     let { image, current_price, name, market_cap } = Coin[coinName]
+
+    function showForm() {
+        let copy = JSON.parse(JSON.stringify(transaction[0]))
+        copy.form = ''
+        transaction[1](copy)
+    }
+
     return (
-        <Card className={`coin ${name}`} onClick={() => console.log(image, current_price, name, market_cap )}>
+        <Card className={`coin ${name}`} onClick={showForm}>
             <Logo src={image} />
             <Details>
                 <h1>${current_price}</h1>

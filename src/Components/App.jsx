@@ -6,15 +6,17 @@ import { useState, useEffect } from "react";
 import Price from "./Price";
 import Holdings from "./Holdings";
 import Transactions from "./Transactions";
+import Form from "./Form";
 
 let Container = styled.div`
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   background-image: url("images/bg.svg");
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px;
+  gap: .5em;
+
 `;
 let Bottom = styled.div`
     width: 60%; 
@@ -34,6 +36,8 @@ export default function App() {
         bitcoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
         ethereum: { quantity: 0, boughtPrice: 0, currentPrice: 0 }
     })
+    let [transaction, setTransaction] = useState({form: 'hidden'})
+
     async function getPrices() {
         let response = await fetch(API);
         let data = await response.json();
@@ -57,13 +61,20 @@ export default function App() {
     }
 
     useEffect(() => {
-        getPrices()
+        let refreshPrice = setInterval(() => getPrices(), 5000)
+        return () => clearInterval(refreshPrice)
     }, [])
 
+    function hideForm() {
+        let copy = JSON.parse(JSON.stringify(transaction))
+        copy.form = 'hidden'
+        setTransaction(copy)
+    }
 
     return (
-        < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
-            <Container>
+        < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding], transaction: [transaction, setTransaction] }}>
+            <Container>    
+                <Form display={transaction.form} hide={hideForm}/>
                 <Header />
                 <Price />
                 <Bottom>

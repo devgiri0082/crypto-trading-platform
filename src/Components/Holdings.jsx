@@ -3,12 +3,17 @@ import styled from 'styled-components'
 import CoinContext from '../Context/CoinContext'
 import EachHoldings from './EachHoldings'
 let Box = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-right: 15px;
-    margin-top: 20px;
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 1em;
+padding: 1em;
+
+h1 {
+    font-weight: 500;
+}
 `
+
 let Title = styled.h1`
 `
 export default function Holdings() {

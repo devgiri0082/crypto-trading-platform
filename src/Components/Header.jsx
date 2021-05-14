@@ -5,13 +5,15 @@ let Heading = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: .5em;
+    margin-top: 30px;
 `
 let Title = styled.div`
 font-size: 40px;
 `
 let Message = styled(Title)`
     font-size: 15px;
-    opacity: 0.7;
+    opacity: 0.8;
 `
 let Money = styled(Title)`
     font-size: 20px;
