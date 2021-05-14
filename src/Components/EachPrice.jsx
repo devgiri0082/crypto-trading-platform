@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import CoinContext from '../Context/CoinContext'
+import Form from './Form'
 
 let Card = styled.div`
     display: flex;
@@ -10,6 +11,7 @@ let Card = styled.div`
     background-color: white;
     align-items: center;
     gap: 1em;
+    cursor: pointer;
 `
 
 let Logo = styled.img`
@@ -36,14 +38,14 @@ let Details = styled.div`
 
 export default function EachPrice({ coinName }) {
     let { Coin } = useContext(CoinContext)
-    let {image, current_price, name, market_cap} = Coin[coinName]
+    let { image, current_price, name, market_cap } = Coin[coinName]
     return (
-        <Card>
+        <Card onClick={((e) => <Form />)}>
             <Logo src={image} />
             <Details>
-            <h1>${current_price}</h1>
-            <p className='name'><b>{name}</b></p>
-            <p className='cap'>Last 24h: <span style={{color: market_cap > 0 ? 'green' : 'red'}} >{market_cap}%</span></p>
+                <h1>${current_price}</h1>
+                <p className='name'><b>{name}</b></p>
+                <p className='cap'>Last 24h: <span style={{ color: market_cap > 0 ? 'green' : 'red' }} >{market_cap}%</span></p>
             </Details>
         </Card>
     )
