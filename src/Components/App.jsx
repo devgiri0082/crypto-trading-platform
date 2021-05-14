@@ -20,9 +20,9 @@ export default function App() {
     let [prices, setPrices] = useState({});
     let [wallet, setWallet] = useState(100);
     let [holding, setHolding] = useState({
-        dogecoin: {},
-        bitcoin: [],
-        ethereum: []
+        dogecoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
+        bitcoin: { quantity: 0, boughtPrice: undefined, currentPrice: undefined },
+        ethereum: { quantity: 0, boughtPrice: undefined, currentPrice: undefined }
     })
 
 
@@ -46,7 +46,7 @@ export default function App() {
     }, [])
 
     return (
-        <CoinContext.Provider value={{ Coin: prices, Wallet: 100, Holdings: { Holding } }}>
+        <CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding] }}>
             <Container>
                 <Header />
             </Container>
