@@ -40,15 +40,7 @@ export default function EachPrice({ coinName }) {
     let { Coin, wallet, holdings } = useContext(CoinContext)
     let { image, current_price, name, market_cap } = Coin[coinName]
     return (
-        <Card className={`coin ${name}`} onClick={((e) => {
-            let value = e.target.classList;
-            while (value[2] !== "coin") {
-                value = e.target.parentNode.classList;
-            }
-            value = value[3].toLowerCase();
-            console.log(value, holdings[0][value].currentPrice, holdings[0][value].quantity);
-            <Form name={value} currentPrice={holdings[0][value].currentPrice} buy={maxBuy(holdings[0][value].currentPrice)} sell={holdings[0][value].quantity} />
-        })}>
+        <Card className={`coin ${name}`} onClick={() => console.log(image, current_price, name, market_cap )}>
             <Logo src={image} />
             <Details>
                 <h1>${current_price}</h1>
