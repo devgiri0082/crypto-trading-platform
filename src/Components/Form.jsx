@@ -2,13 +2,11 @@ import { useState } from "react"
 import styled from "styled-components"
 
 let MainDiv = styled.div`
-
 `
 let Header = styled.div`
-
 `
 
-let FormBody = styled.div`
+let FormBody = style.div`
 
 `
 
