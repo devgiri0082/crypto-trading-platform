@@ -37,16 +37,27 @@ let Details = styled.div`
 `
 
 export default function EachPrice({ coinName }) {
-    let { Coin } = useContext(CoinContext)
+    let { Coin, wallet, holdings } = useContext(CoinContext)
     let { image, current_price, name, market_cap } = Coin[coinName]
     return (
-        <Card onClick={((e) => { console.log(e.target); })}>
+        <Card className={`coin ${name}`} onClick={((e) => {
+            let value = e.target.classList;
+            while (value[2] !== "coin") {
+                value = e.target.parentNode.classList;
+            }
+            value = value[3].toLowerCase();
+            console.log(value, holdings[0][value].currentPrice, holdings[0][value].quantity);
+            <Form name={value} currentPrice={holdings[0][value].currentPrice} buy={maxBuy(holdings[0][value].currentPrice)} sell={holdings[0][value].quantity} />
+        })}>
             <Logo src={image} />
             <Details>
                 <h1>${current_price}</h1>
                 <p className='name'><b>{name}</b></p>
                 <p className='cap'>Last 24h: <span style={{ color: market_cap > 0 ? 'green' : 'red' }} >{market_cap}%</span></p>
             </Details>
-        </Card>
+        </Card >
     )
+    function maxBuy(price) {
+        return wallet[0] / price;
+    }
 }

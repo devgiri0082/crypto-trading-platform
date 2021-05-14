@@ -6,7 +6,7 @@ let MainDiv = styled.div`
 let Header = styled.div`
 `
 
-let FormBody = style.div`
+let FormBody = styled.div`
 
 `
 
