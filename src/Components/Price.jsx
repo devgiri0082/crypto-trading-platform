@@ -11,10 +11,10 @@ let PriceDiv = styled.div`
 `
 
 export default function Price() {
-    let { Coin } = useContext(CoinContext)
+  let { Coin } = useContext(CoinContext)
   return (
     <PriceDiv>
-          {Object.keys(Coin).map(el => <EachPrice coinName={el} />)}
+      {Object.keys(Coin).map(el => <EachPrice coinName={el} />)}
     </PriceDiv>
   );
 }
