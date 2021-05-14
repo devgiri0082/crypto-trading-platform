@@ -40,7 +40,7 @@ export default function EachPrice({ coinName }) {
     let { Coin } = useContext(CoinContext)
     let { image, current_price, name, market_cap } = Coin[coinName]
     return (
-        <Card onClick={((e) => <Form />)}>
+        <Card onClick={((e) => { console.log(e.target); })}>
             <Logo src={image} />
             <Details>
                 <h1>${current_price}</h1>
