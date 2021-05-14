@@ -39,7 +39,7 @@ export default function App() {
     }, [])
 
   return (
-    <CoinContext.Provider value={{ Prices: prices, Wallet: 100 }}>
+      <CoinContext.Provider value={{ Coin: prices, Wallet: 100, Holdings: { dogecoin: [], bitcoin: [], ethereum: []} }}>
       <Container>
         <Header />
       </Container>
