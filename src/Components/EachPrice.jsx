@@ -43,8 +43,8 @@ export default function EachPrice({ coinName }) {
     function showForm() {
         let copy = JSON.parse(JSON.stringify(transactionValues[0])) // // merged the transaction and values context
         copy.form = '';
-        copy.coinName = name;
-        copy.current_price = current_price;
+        copy.coinName = coinName;
+        copy.name = name;
         transactionValues[1](copy)
     }
 

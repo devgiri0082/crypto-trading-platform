@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
+import CoinContext from '../Context/CoinContext'
 
 let MainDiv = styled.div`
     display: flex;
@@ -27,15 +28,15 @@ let MainDiv = styled.div`
     }
 `
 
-export default function EachTransactions({ elem }) {
-
-    let [type, coinName, quantity, currentPrice, date] = [elem[0], elem[1], elem[2], elem[3], (new Date())]
+export default function EachTransactions({index}) {
+    let { doneTransaction } = useContext(CoinContext)
+    let [type, coinName, quantity, currentPrice, date] = doneTransaction[0][index]
 
     return (
         <MainDiv className={type}>
             <p>{coinName + ' ~ ' + quantity + '@' + currentPrice}</p>
             <p>Paid: ${parseFloat((quantity * currentPrice).toFixed(2))}</p>
-            <p className="date">{type} on {String(date.toLocaleString())}</p>
+            <p className="date">{type} on {date}</p>
         </MainDiv>
     )
 }

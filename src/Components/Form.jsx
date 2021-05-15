@@ -84,10 +84,11 @@ let FormBody = styled.div`
   }
 `;
 
-export default function Forms({ doneTransaction, setDoneTransaction }) {
+export default function Forms() {
 
-  let { transactionValues, holdings, wallet } = useContext(CoinContext)
-  let { form, coinName, current_price } = transactionValues[0] // merged the transaction and values context
+  let { Coin, transactionValues, holdings, wallet, doneTransaction } = useContext(CoinContext)
+  let { form, coinName, name } = transactionValues[0]
+  let current_price = Coin[coinName] ? Coin[coinName].current_price : 0
 
   let [valid, setValid] = useState(false); // former click, setClick
   let [type, setType] = useState("Buy");
@@ -118,14 +119,15 @@ export default function Forms({ doneTransaction, setDoneTransaction }) {
   }
 
   function submit() {
+    let quantity = Number(inputRef.current.value);
     if (!valid) return;
     let state = type === "Buy" ? "Bought" : "Sold";
     //reflecting the buy or sell on transactions
-    setDoneTransaction([...doneTransaction, [state, coinName, inputRef.current.value, current_price]]);
+    doneTransaction[1]([...doneTransaction[0], [state, name, inputRef.current.value, current_price, (new Date()).toLocaleString()]]);
     let tempHolding = JSON.parse(JSON.stringify(holdings[0]));
     //changing the holding to reflect the changes on currentHolding not perfect
-    tempHolding[coinName.toLowerCase()].quantity = tempHolding[coinName.toLowerCase()].quantity + Number(inputRef.current.value);
-    tempHolding[coinName.toLowerCase()].boughtPrice = current_price;
+    tempHolding[coinName].quantity = type === 'Buy' ? tempHolding[coinName].quantity + quantity : tempHolding[coinName].quantity - quantity;
+    tempHolding[coinName].boughtPriceTotal = type === 'Buy' ? tempHolding[coinName].boughtPriceTotal + (quantity * current_price) : tempHolding[coinName].boughtPriceTotal - (quantity * current_price)
     holdings[1](tempHolding);
   }
 
@@ -138,7 +140,7 @@ export default function Forms({ doneTransaction, setDoneTransaction }) {
     <Background className={form}>
       <MainDiv>
         <Header>
-          <div className="title">{type + " " + coinName}</div>
+          <div className="title">{type + " " + name}</div>
           <button onClick={hideForm}>X</button>
         </Header>
         <FormBody>
@@ -146,7 +148,6 @@ export default function Forms({ doneTransaction, setDoneTransaction }) {
           <label>
             <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue} />
             <p onClick={placeMax}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p>
-            {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
           </label>
           <label>
             <input type="radio" name="type" value="Buy" onChange={() => {

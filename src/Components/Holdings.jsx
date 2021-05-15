@@ -21,7 +21,9 @@ export default function Holdings() {
     return (
         <Box>
             <Title>Current Holdings</Title>
-            {Object.entries(holdings[0]).map(elem => <EachHoldings elem={elem} />)}
+            {Object.keys(holdings[0]).map(elem => <EachHoldings coinName={elem} />)}
+            {/* I'm changing the Object.entries to Object.keys, object.keys will give the coin name (elem[0] in entries) 
+            so we know which coin elem is */}
         </Box>
     )
 }

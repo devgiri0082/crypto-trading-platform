@@ -9,9 +9,10 @@ import Transactions from "./Transactions";
 import Forms from "./Form";
 
 let Container = styled.div`
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   background-image: url("images/bg.svg");
+  /* background-repeat: repeat; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,11 +32,11 @@ export default function App() {
     let [prices, setPrices] = useState({});
     let [wallet, setWallet] = useState(100);
     let [holding, setHolding] = useState({
-        dogecoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
-        bitcoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
-        ethereum: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
+        dogecoin: { quantity: 0, boughtPriceTotal: 0 }, // remove current price, we only storing quantity and how much it was bought
+        bitcoin: { quantity: 0, boughtPriceTotal: 0 },  // the current price we will display would be from the Coin context
+        ethereum: { quantity: 0, boughtPriceTotal: 0 },
     });
-    let [transactionValues, setTransactionValues] = useState({ form: "hidden" }); // merged the transaction and values context
+    let [transactionValues, setTransactionValues] = useState({ form: "hidden" }); 
     let [doneTransaction, setDoneTransaction] = useState([]); // storing all the transactions
 
     async function getPrices() {
@@ -53,22 +54,25 @@ export default function App() {
         );
         setPrices(temp);
     }
-    function changeHolding() {
-        let values = JSON.parse(JSON.stringify(holding));
-        for (let coin in prices) {
-            let lowerValue = coin.toLowerCase();
-            values[lowerValue].currentPrice = prices[coin].current_price;
-        }
-        setHolding(values);
-    }
+
+    // function changeHolding() {
+    //     let values = JSON.parse(JSON.stringify(holding));
+    //     for (let coin in prices) {
+    //         let lowerValue = coin.toLowerCase();
+    //         values[lowerValue].currentPrice = prices[coin].current_price;
+    //     }
+    //     setHolding(values);
+    // }
 
     useEffect(() => {
-        let refreshPrice = setInterval(() => getPrices(), 5000);
+        let refreshPrice = setInterval(() => getPrices(), 3000);
         return () => clearInterval(refreshPrice);
     }, []);
-    useEffect(() => {
-        changeHolding();
-    }, [prices])
+
+    // useEffect(() => {
+    //     changeHolding();
+    // }, [prices])
+
     return (
         <CoinContext.Provider
             value={{
@@ -76,15 +80,16 @@ export default function App() {
                 wallet: [wallet, setWallet],
                 holdings: [holding, setHolding],
                 transactionValues: [transactionValues, setTransactionValues],
+                doneTransaction: [doneTransaction, setDoneTransaction]
             }}
         >
             <Container>
-                <Forms doneTransaction={doneTransaction} setDoneTransaction={setDoneTransaction} />
+                <Forms />
                 <Header />
                 <Price />
                 <Bottom>
                     <Holdings />
-                    <Transactions doneTransaction={doneTransaction} />
+                    <Transactions />
                 </Bottom>
             </Container>
         </CoinContext.Provider>
