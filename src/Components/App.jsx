@@ -18,7 +18,8 @@ let Container = styled.div`
   gap: 0.5em;
 `;
 let Bottom = styled.div`
-  width: 60%;
+  width: 90%;
+  max-width: 930px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: 10px;
@@ -69,7 +70,7 @@ export default function App() {
         Coin: prices,
         wallet: [wallet, setWallet],
         holdings: [holding, setHolding],
-        transactionValues: [transactionValues, setTransactionValues]
+        transactionValues: [transactionValues, setTransactionValues],
       }}
     >
       <Container>

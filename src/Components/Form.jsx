@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import CoinContext from "../Context/CoinContext";
 
@@ -89,12 +89,14 @@ export default function Forms() {
   let [valid, setValid] = useState(true); // former click, setClick
   let [type, setType] = useState("Buy");
   let [total, setTotal] = useState(0);
+  let inputRef = useRef()
   
   // useEffect(() => { =====================> // temporarily commented for debugging
   //   setButton(inputValue);
   // }, [type])
   
-  function checkValue(value) {  // former setButton function
+  function checkValue() {  // former setButton function
+    let value = inputRef.current.value
     let totalCan = (maxBuy().toFixed(10));
     if (Number(value) < 0) {
       setValid(false);
@@ -111,6 +113,12 @@ export default function Forms() {
   
   function hideForm() {
     transactionValues[1]({ form: 'hidden' })
+    inputRef.current.value = ''
+  }
+
+  function submit() {
+      if (!valid) return;
+      console.log(inputValue, coinName);
   }
 
   return (
@@ -123,8 +131,8 @@ export default function Forms() {
         <FormBody>
           <p>Current Price: ${current_price}</p>
           <label>
-            <input name="quantity" type="number" min="0" className="amt" placeholder={0} onChange={(e) => checkValue(e.target.value)} />
-            {`Max: ${parseFloat(maxBuy().toFixed(8))}`} {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
+            <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue} />
+            <p onClick={() => inputRef.current.value = parseFloat(maxBuy().toFixed(8))}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p> {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
           </label>
           <label>
             <input type="radio" name="type" value="Buy" onChange={() => setType('Buy')} defaultChecked /> Buy
@@ -132,10 +140,7 @@ export default function Forms() {
           <label>
             <input type="radio" name="type" value="Sell" onChange={() => setType('Sell')} /> Sell
           </label>
-          <button style={{ background: click === true ? "black" : "gray" }} /*onClick={(e) => {
-            if (e.target.style.background === "gray") return;  ==================================> // temporarily commented for debugging
-            console.log(inputValue, coinName);
-          }}*/>{type}</button>
+          <button style={{ background: valid ? "black" : "gray" }} onClick={submit}>{type}</button>
         </FormBody>
       </MainDiv>
     </Background>

@@ -5,8 +5,9 @@ import styled from 'styled-components'
 
 let PriceDiv = styled.div`
     display: grid;
-    width: 60%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 90%;
+    max-width: 930px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 0.5em;
 `
 
