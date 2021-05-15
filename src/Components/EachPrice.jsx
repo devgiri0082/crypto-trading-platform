@@ -37,18 +37,19 @@ let Details = styled.div`
 `
 
 export default function EachPrice({ coinName }) {
-    let { Coin, wallet, holdings, transaction, values } = useContext(CoinContext)
+    let { Coin, wallet, holdings, transactionValues, values } = useContext(CoinContext)
     let { image, current_price, name, market_cap } = Coin[coinName]
 
     function showForm() {
-        let copy = JSON.parse(JSON.stringify(transaction[0]))
-        copy.form = ''
-        transaction[1](copy)
+        let copy = JSON.parse(JSON.stringify(transactionValues[0])) // // merged the transaction and values context
+        copy.form = '';
+        copy.coinName = name;
+        copy.current_price = current_price;
+        transactionValues[1](copy)
     }
 
     return (
-        <Card className={`coin ${name}`} onClick={() => {
-            values[1]([name.toLowerCase(), current_price, holdings[0][name.toLowerCase()].quantity, maxBuy(current_price)]);
+        <Card /*className={`coin ${name}`}*/ onClick={() => {
             showForm();
         }
         }>
@@ -60,8 +61,4 @@ export default function EachPrice({ coinName }) {
             </Details>
         </Card >
     )
-    function maxBuy(price) {
-        console.log()
-        return wallet[0] / price;
-    }
 }

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import CoinContext from "../Context/CoinContext";
 
 
 let Background = styled.div`
@@ -24,6 +25,7 @@ let MainDiv = styled.div`
   margin-bottom: 5em;
   border-radius: 10px;
 `;
+
 let Header = styled.div`
   height: 15%;
   display: flex;
@@ -78,57 +80,64 @@ let FormBody = styled.div`
   }
 `;
 
-export default function Forms(props) {
-  let [inputValue, setInputValue] = useState("0");
-  let [click, setClick] = useState(true);
+export default function Forms() {
+
+  let { transactionValues, holdings, wallet } = useContext(CoinContext)
+  let { form, coinName, current_price} = transactionValues[0] // merged the transaction and values context
+
+  let [inputValue, setInputValue] = useState('0');
+  let [valid, setValid] = useState(true); // former click, setClick
   let [type, setType] = useState("Buy");
   let [total, setTotal] = useState(0);
-  let [coinName, currentPrice, maxSell, maxBuy] = [props.values[0], props.values[1], props.values[2], props.values[3]];
-  useEffect(() => {
-    setButton(inputValue);
-  }, [type])
+  
+  // useEffect(() => { =====================> // temporarily commented for debugging
+  //   setButton(inputValue);
+  // }, [type])
+  
+  function checkValue(value) {  // former setButton function
+    let totalCan = (maxBuy().toFixed(10));
+    if (Number(value) < 0) {
+      setValid(false);
+      return;
+    }
+    totalCan < (value === "" ? 0 : Number(value)) ? setValid(false) : setValid(true);
+    setTotal(value*current_price)
+  }
+
+  function maxBuy() {
+    if (type === 'Buy') return wallet[0] / current_price;
+    return holdings[0][coinName] ? holdings[0][coinName].quantity * current_price : 0;
+  }
+  
+  function hideForm() {
+    transactionValues[1]({ form: 'hidden' })
+  }
+
   return (
-    <Background className={props.display}>
+    <Background className={form}>
       <MainDiv>
         <Header>
           <div className="title">{type + " " + coinName}</div>
-          <button onClick={() => {
-            setType("Buy");
-            props.hide()
-          }}>X</button>
+          <button onClick={hideForm}>X</button>
         </Header>
         <FormBody>
-          <p>Current Price: ${currentPrice}</p>
+          <p>Current Price: ${current_price}</p>
           <label>
-            <input name="quantity" type="number" min="0" className="amt" placeholder={0} onChange={(e) => {
-              setInputValue(e.target.value);
-              setButton(e.target.value);
-            }} />
-            {`Max ${type}: ${type === "Buy" ? maxBuy.toFixed(10) : maxSell}`}
+            <input name="quantity" type="number" min="0" className="amt" placeholder={0} onChange={(e) => checkValue(e.target.value)} />
+            {`Max: ${parseFloat(maxBuy().toFixed(8))}`} {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
           </label>
           <label>
-            <input type="radio" checked name="type" value="Buy" onClick={() => {
-              setType("Buy")
-            }} /> Buy
+            <input type="radio" name="type" value="Buy" onChange={() => setType('Buy')} defaultChecked /> Buy
           </label>
           <label>
-            <input type="radio" name="type" value="Sell" onClick={() => setType("Sell")} /> Sell
+            <input type="radio" name="type" value="Sell" onChange={() => setType('Sell')} /> Sell
           </label>
-          <button style={{ background: click === true ? "black" : "gray" }} onClick={(e) => {
-            if (e.target.style.background === "gray") return;
+          <button style={{ background: click === true ? "black" : "gray" }} /*onClick={(e) => {
+            if (e.target.style.background === "gray") return;  ==================================> // temporarily commented for debugging
             console.log(inputValue, coinName);
-          }}>{type}</button>
+          }}*/>{type}</button>
         </FormBody>
       </MainDiv>
     </Background>
   )
-  function setButton(value) {
-    let totalCan = (type === "Buy" ? maxBuy.toFixed(10) : maxSell);
-    if (Number(value) < 0) {
-      setClick(false);
-      return;
-    }
-    totalCan < (value === "" ? 0 : Number(value)) ? setClick(false) : setClick(true);
-
-  }
 }

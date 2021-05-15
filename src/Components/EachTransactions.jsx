@@ -11,7 +11,7 @@ let MainDiv = styled.div`
     justify-content: center;
     font-weight: 400;
     gap: 0.2em;
-    width: 100%;
+    width: 95%;
     color: #505050;
 
     &.Bought {
