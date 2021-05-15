@@ -17,11 +17,11 @@ h1 {
 let Title = styled.h1`
 `
 export default function Holdings() {
-    let contextData = useContext(CoinContext);
+    let { holdings } = useContext(CoinContext);
     return (
         <Box>
             <Title>Current Holdings</Title>
-            {Object.entries(contextData.holdings[0]).map(elem => <EachHoldings elem={elem} />)}
+            {Object.entries(holdings[0]).map(elem => <EachHoldings elem={elem} />)}
         </Box>
     )
 }

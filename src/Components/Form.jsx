@@ -63,6 +63,10 @@ let FormBody = styled.div`
     font-size: 13.7px;
   }
 
+  label p {
+    cursor: pointer;
+  }
+
   .amt {
     height: 2.5em;
     padding: 0em 0.5em;
@@ -85,20 +89,16 @@ export default function Forms() {
   let { transactionValues, holdings, wallet } = useContext(CoinContext)
   let { form, coinName, current_price} = transactionValues[0] // merged the transaction and values context
 
-  let [inputValue, setInputValue] = useState('0');
-  let [valid, setValid] = useState(true); // former click, setClick
+  let [valid, setValid] = useState(false); // former click, setClick
   let [type, setType] = useState("Buy");
   let [total, setTotal] = useState(0);
-  let inputRef = useRef()
-  
-  // useEffect(() => { =====================> // temporarily commented for debugging
-  //   setButton(inputValue);
-  // }, [type])
+
+  let inputRef = useRef() // replaced inputValue state with a ref
   
   function checkValue() {  // former setButton function
     let value = inputRef.current.value
     let totalCan = (maxBuy().toFixed(10));
-    if (Number(value) < 0) {
+    if (Number(value) <= 0 || value === '') {
       setValid(false);
       return;
     }
@@ -108,17 +108,23 @@ export default function Forms() {
 
   function maxBuy() {
     if (type === 'Buy') return wallet[0] / current_price;
-    return holdings[0][coinName] ? holdings[0][coinName].quantity * current_price : 0;
+    return holdings[0][coinName] ? holdings[0][coinName].quantity : 0;
   }
   
   function hideForm() {
     transactionValues[1]({ form: 'hidden' })
     inputRef.current.value = ''
+    setValid(false);
   }
 
   function submit() {
       if (!valid) return;
-      console.log(inputValue, coinName);
+      console.log(type, inputRef.current.value, coinName);
+  }
+
+  function placeMax() {
+    inputRef.current.value = parseFloat(maxBuy().toFixed(8))
+    setValid(true)
   }
 
   return (
@@ -131,14 +137,23 @@ export default function Forms() {
         <FormBody>
           <p>Current Price: ${current_price}</p>
           <label>
-            <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue} />
-            <p onClick={() => inputRef.current.value = parseFloat(maxBuy().toFixed(8))}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p> {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
+            <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue}/>
+            <p onClick={placeMax}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p>
+            {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
           </label>
           <label>
-            <input type="radio" name="type" value="Buy" onChange={() => setType('Buy')} defaultChecked /> Buy
+            <input type="radio" name="type" value="Buy" onChange={() => {
+              setType('Buy')
+              inputRef.current.value = ''
+              setValid(false)
+            }} defaultChecked /> Buy
           </label>
           <label>
-            <input type="radio" name="type" value="Sell" onChange={() => setType('Sell')} /> Sell
+            <input type="radio" name="type" value="Sell" onChange={() => {
+              setType('Sell')
+              inputRef.current.value = ''
+              setValid(false)
+            }} /> Sell
           </label>
           <button style={{ background: valid ? "black" : "gray" }} onClick={submit}>{type}</button>
         </FormBody>
