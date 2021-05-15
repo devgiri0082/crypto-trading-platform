@@ -84,17 +84,17 @@ let FormBody = styled.div`
   }
 `;
 
-export default function Forms() {
+export default function Forms({ doneTransaction, setDoneTransaction }) {
 
   let { transactionValues, holdings, wallet } = useContext(CoinContext)
-  let { form, coinName, current_price} = transactionValues[0] // merged the transaction and values context
+  let { form, coinName, current_price } = transactionValues[0] // merged the transaction and values context
 
   let [valid, setValid] = useState(false); // former click, setClick
   let [type, setType] = useState("Buy");
   let [total, setTotal] = useState(0);
 
   let inputRef = useRef() // replaced inputValue state with a ref
-  
+
   function checkValue() {  // former setButton function
     let value = inputRef.current.value
     let totalCan = (maxBuy().toFixed(10));
@@ -103,14 +103,14 @@ export default function Forms() {
       return;
     }
     totalCan < (value === "" ? 0 : Number(value)) ? setValid(false) : setValid(true);
-    setTotal(value*current_price)
+    setTotal(value * current_price)
   }
 
   function maxBuy() {
     if (type === 'Buy') return wallet[0] / current_price;
     return holdings[0][coinName] ? holdings[0][coinName].quantity : 0;
   }
-  
+
   function hideForm() {
     transactionValues[1]({ form: 'hidden' })
     inputRef.current.value = ''
@@ -118,8 +118,9 @@ export default function Forms() {
   }
 
   function submit() {
-      if (!valid) return;
-      console.log(type, inputRef.current.value, coinName);
+    if (!valid) return;
+    let state = type === "Buy" ? "Bought" : "Sold";
+    console.log(type, inputRef.current.value, coinName);
   }
 
   function placeMax() {
@@ -137,7 +138,7 @@ export default function Forms() {
         <FormBody>
           <p>Current Price: ${current_price}</p>
           <label>
-            <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue}/>
+            <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue} />
             <p onClick={placeMax}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p>
             {/*removed sell buy word so it would fit in one line and form doesn't change size*/}
           </label>

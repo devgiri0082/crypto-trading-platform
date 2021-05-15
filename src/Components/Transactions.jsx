@@ -27,27 +27,12 @@ let TransactionList = styled.div`
   }
 `;
 
-export default function Transactions() {
+export default function Transactions({ doneTransaction }) {
   return (
     <MainDiv>
       <h1>Transactions</h1>
       <TransactionList>
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
-        <EachTransactions />
+        {doneTransaction.map(elem => <EachTransactions elem={elem} />)}
       </TransactionList>
     </MainDiv>
   );

@@ -27,9 +27,9 @@ let MainDiv = styled.div`
     }
 `
 
-export default function EachTransactions() {
+export default function EachTransactions({ elem }) {
 
-    let [ type, coinName, quantity, currentPrice, date] = ['Bought', 'Dogecoin', 50, 0.511823, (new Date())]
+    let [type, coinName, quantity, currentPrice, date] = [elem[0], elem[1], elem[2], elem[3], (new Date())]
 
     return (
         <MainDiv className={type}>
