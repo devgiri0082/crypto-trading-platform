@@ -20,7 +20,7 @@ export default function EachHoldings({ elem }) {
         return (
             <Box>
                 <Quantity>{`${elem[0]}: ${elem[1].quantity}`}</Quantity>
-                <Quantity>{`Total Paid: $${totalPaid}, Current Value: $${currentValue}`}</Quantity>
+                <Quantity>{`Total Paid: $${totalPaid.toFixed(2)}, Current Value: $${currentValue.toFixed(2)}`}</Quantity>
                 <Quantity currentValue={currentValue - totalPaid}>{`P/L ${currentValue - totalPaid}`}</Quantity>
 
             </Box>

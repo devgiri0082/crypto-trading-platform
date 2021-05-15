@@ -27,7 +27,7 @@ export default function Header() {
         <Heading>
             <Title>Earn some virtual money 💰</Title>
             <Message>To buy virtual food🍕</Message>
-            <Money>🏦 Wallet: ${contextData.wallet[0]}</Money>
+            <Money>🏦 Wallet: ${contextData.wallet[0].toFixed(2)}</Money>
             <Portfolio>Portfolio Value: ${Object.entries(contextData.holdings[0]).reduce((acc, elem) => acc + elem[1].quantity * elem[1].currentPrice, 0).toFixed(2)}</Portfolio>
             <Portfolio></Portfolio>
         </Heading>

@@ -120,7 +120,13 @@ export default function Forms({ doneTransaction, setDoneTransaction }) {
   function submit() {
     if (!valid) return;
     let state = type === "Buy" ? "Bought" : "Sold";
-    console.log(type, inputRef.current.value, coinName);
+    //reflecting the buy or sell on transactions
+    setDoneTransaction([...doneTransaction, [state, coinName, inputRef.current.value, current_price]]);
+    let tempHolding = JSON.parse(JSON.stringify(holdings[0]));
+    //changing the holding to reflect the changes on currentHolding not perfect
+    tempHolding[coinName.toLowerCase()].quantity = tempHolding[coinName.toLowerCase()].quantity + Number(inputRef.current.value);
+    tempHolding[coinName.toLowerCase()].boughtPrice = current_price;
+    holdings[1](tempHolding);
   }
 
   function placeMax() {

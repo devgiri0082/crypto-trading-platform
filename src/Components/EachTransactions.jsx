@@ -35,7 +35,7 @@ export default function EachTransactions({ elem }) {
         <MainDiv className={type}>
             <p>{coinName + ' ~ ' + quantity + '@' + currentPrice}</p>
             <p>Paid: ${parseFloat((quantity * currentPrice).toFixed(2))}</p>
-            <p className="date">{type} on {date.toLocaleString()}</p>
+            <p className="date">{type} on {String(date.toLocaleString())}</p>
         </MainDiv>
     )
 }

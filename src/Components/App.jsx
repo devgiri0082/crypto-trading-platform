@@ -52,10 +52,12 @@ export default function App() {
             })
         );
         setPrices(temp);
+    }
+    function changeHolding() {
         let values = JSON.parse(JSON.stringify(holding));
-        for (let coin in temp) {
+        for (let coin in prices) {
             let lowerValue = coin.toLowerCase();
-            values[lowerValue].currentPrice = temp[coin].current_price;
+            values[lowerValue].currentPrice = prices[coin].current_price;
         }
         setHolding(values);
     }
@@ -64,7 +66,9 @@ export default function App() {
         let refreshPrice = setInterval(() => getPrices(), 5000);
         return () => clearInterval(refreshPrice);
     }, []);
-
+    useEffect(() => {
+        changeHolding();
+    }, [prices])
     return (
         <CoinContext.Provider
             value={{
