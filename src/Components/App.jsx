@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Price from "./Price";
 import Holdings from "./Holdings";
 import Transactions from "./Transactions";
-import Form from "./Form";
+import Forms from "./Form";
 
 let Container = styled.div`
   height: 100%;
@@ -36,7 +36,8 @@ export default function App() {
         bitcoin: { quantity: 0, boughtPrice: 0, currentPrice: 0 },
         ethereum: { quantity: 0, boughtPrice: 0, currentPrice: 0 }
     })
-    let [transaction, setTransaction] = useState({form: 'hidden'})
+    let [transaction, setTransaction] = useState({ form: 'hidden' });
+    let [values, setValues] = useState([0, 0, 0, 0]);
 
     async function getPrices() {
         let response = await fetch(API);
@@ -72,9 +73,9 @@ export default function App() {
     }
 
     return (
-        < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding], transaction: [transaction, setTransaction] }}>
-            <Container>    
-                <Form display={transaction.form} hide={hideForm}/>
+        < CoinContext.Provider value={{ Coin: prices, wallet: [wallet, setWallet], holdings: [holding, setHolding], transaction: [transaction, setTransaction], values: [values, setValues] }}>
+            <Container>
+                <Forms display={transaction.form} hide={hideForm} values={values} />
                 <Header />
                 <Price />
                 <Bottom>

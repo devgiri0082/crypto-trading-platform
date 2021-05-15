@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 let Background = styled.div`
   position: fixed;
@@ -57,6 +59,7 @@ let FormBody = styled.div`
     display: flex;
     gap: 0.5em;
     align-items: center;
+    font-size: 13.7px;
   }
 
   .amt {
@@ -70,39 +73,63 @@ let FormBody = styled.div`
   button {
     padding: 0.5em 1em;
     border: none;
-    background-color: #353434;
     color: white;
     border-radius: 5px;
     cursor: pointer;
   }
 `;
 
-export default function Form(props) {
+export default function Forms(props) {
+  let [inputValue, setInputValue] = useState("0");
+  let [click, setClick] = useState(true);
   let [type, setType] = useState("Buy");
-    let [coinName, currentPrice] = ["Dogecoin", 0.511823];
-
+  let [total, setTotal] = useState(0);
+  let [coinName, currentPrice, maxSell, maxBuy] = [props.values[0], props.values[1], props.values[2], props.values[3]];
+  useEffect(() => {
+    setButton(inputValue);
+  }, [type])
   return (
     <Background className={props.display}>
       <MainDiv>
         <Header>
           <div className="title">{type + " " + coinName}</div>
-          <button onClick={() => props.hide()}>X</button>
+          <button onClick={() => {
+            setType("Buy");
+            props.hide()
+          }}>X</button>
         </Header>
         <FormBody>
           <p>Current Price: ${currentPrice}</p>
           <label>
-            <input className="amt" type="text" placeholder="0" />
-            Max: 195.123456
+            <input name="quantity" type="number" min="0" className="amt" placeholder={0} onChange={(e) => {
+              setInputValue(e.target.value);
+              setButton(e.target.value);
+            }} />
+            {`Max ${type}: ${type === "Buy" ? maxBuy.toFixed(10) : maxSell}`}
           </label>
           <label>
-            <input type="radio" name="type" value="Buy" /> Buy
+            <input type="radio" checked name="type" value="Buy" onClick={() => {
+              setType("Buy")
+            }} /> Buy
           </label>
           <label>
-            <input type="radio" name="type" value="Sell" /> Sell
+            <input type="radio" name="type" value="Sell" onClick={() => setType("Sell")} /> Sell
           </label>
-          <button>{type}</button>
+          <button style={{ background: click === true ? "black" : "gray" }} onClick={(e) => {
+            if (e.target.style.background === "gray") return;
+            console.log(inputValue, coinName);
+          }}>{type}</button>
         </FormBody>
       </MainDiv>
     </Background>
-  );
+  )
+  function setButton(value) {
+    let totalCan = (type === "Buy" ? maxBuy.toFixed(10) : maxSell);
+    if (Number(value) < 0) {
+      setClick(false);
+      return;
+    }
+    totalCan < (value === "" ? 0 : Number(value)) ? setClick(false) : setClick(true);
+
+  }
 }
