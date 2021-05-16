@@ -5,12 +5,13 @@ import CoinContext from '../Context/CoinContext'
 let Card = styled.div`
     display: flex;
     box-shadow: 1px 1px 5px rgb(182, 181, 181);
-    padding: 0.5em 1em;
+    padding: 0.5em;
     border-radius: 10px;
     background-color: white;
     align-items: center;
-    gap: 1em;
+    gap: .5em;
     cursor: pointer;
+    width: 100%;
 `
 
 let Logo = styled.img`
@@ -27,6 +28,7 @@ let Details = styled.div`
     }
 
     .name {
+        font-size: 1.2rem;
         font-weight: 400;
     }
 

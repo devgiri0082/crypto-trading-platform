@@ -51,7 +51,7 @@ export default function Transactions() {
       {doneTransaction[0].length !== 0 ? (
         <TransactionList>
           {doneTransaction[0].map((elem, index) => (
-            <EachTransactions index={index} key={index} />
+            <EachTransactions index={index} key={'transaction ' + index} />
           ))}
         </TransactionList>
       )

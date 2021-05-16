@@ -58,7 +58,7 @@ export default function Holdings() {
         (
           <HoldingList>
             {Object.keys(holdings[0]).map((elem, index) => (
-              <EachHoldings coinName={elem} key={index} />
+              <EachHoldings coinName={elem} key={'holdings ' + index} />
             ))}
           </HoldingList>
         )}

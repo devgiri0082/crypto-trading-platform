@@ -28,7 +28,7 @@ let MainDiv = styled.div`
     }
 `
 
-export default function EachTransactions({index}) { // instead of passing whole object, I changed to passing just the index and access the index in context
+export default function EachTransactions({index}) {
     let { doneTransaction } = useContext(CoinContext)
     let [type, coinName, quantity, currentPrice, date] = doneTransaction[0][index]
 

@@ -125,6 +125,7 @@ export default function Forms() {
     transactionValues[1]({ form: 'hidden' })
     inputRef.current.value = ''
     setValid(false);
+    setTotal(0)
   }
 
   function submit() {
@@ -171,7 +172,7 @@ export default function Forms() {
             {valid &&
               <p className='total' >You will {type === 'Buy' ? 'be charged ' : 'receive '} ${total.toFixed(2)}</p>
             }
-            {!valid &&
+            {!valid && total !== 0 &&
               <p className='total' >Please enter a valid quantity</p>
             }
           </InputValue>

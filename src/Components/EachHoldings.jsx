@@ -30,10 +30,9 @@ let Quantity = styled.div`
 export default function EachHoldings({ coinName }) {
     let { price, holdings } = useContext(CoinContext)
     let { quantity, boughtPriceTotal } = holdings[0][coinName]
-    let current_price = price[coinName] ? price[coinName].current_price : 0  // getting the current price from the price context, former Coin context
-    // let totalPaid = quantity * boughtPrice;   =======> removed this because brought price would be different each transaction so we should just store the total in the context
+    let current_price = price[coinName] ? price[coinName].current_price : 0 
     let currentValue = quantity * current_price;
-    let pl = parseFloat((currentValue - boughtPriceTotal).toFixed(3)) // still not sure how to compute P/L
+    let pl = parseFloat((currentValue - boughtPriceTotal).toFixed(3))
     return (
         <>
             {quantity > 0 &&
