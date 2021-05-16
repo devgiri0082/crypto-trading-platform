@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import CoinContext from '../Context/CoinContext'
-import Form from './Form'
 
 let Card = styled.div`
     display: flex;
@@ -37,11 +36,11 @@ let Details = styled.div`
 `
 
 export default function EachPrice({ coinName }) {
-    let { Coin, wallet, holdings, transactionValues, values } = useContext(CoinContext)
-    let { image, current_price, name, market_cap } = Coin[coinName]
+    let { price, transactionValues } = useContext(CoinContext)
+    let { image, current_price, name, market_cap } = price[coinName]
 
     function showForm() {
-        let copy = JSON.parse(JSON.stringify(transactionValues[0])) // // merged the transaction and values context
+        let copy = JSON.parse(JSON.stringify(transactionValues[0]))
         copy.form = '';
         copy.coinName = coinName;
         copy.name = name;
@@ -49,10 +48,7 @@ export default function EachPrice({ coinName }) {
     }
 
     return (
-        <Card /*className={`coin ${name}`}*/ onClick={() => {
-            showForm();
-        }
-        }>
+        <Card onClick={showForm}>
             <Logo src={image} />
             <Details>
                 <h1>${current_price}</h1>

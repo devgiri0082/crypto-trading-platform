@@ -3,7 +3,7 @@ import CoinContext from "../Context/CoinContext";
 import EachPrice from "./EachPrice";
 import styled from 'styled-components'
 
-let PriceDiv = styled.div`
+let MainDiv = styled.div`
     display: grid;
     width: 90%;
     max-width: 930px;
@@ -12,10 +12,10 @@ let PriceDiv = styled.div`
 `
 
 export default function Price() {
-  let { Coin } = useContext(CoinContext)
+  let { price } = useContext(CoinContext)
   return (
-    <PriceDiv>
-      {Object.keys(Coin).map(el => <EachPrice coinName={el} />)}
-    </PriceDiv>
+    <MainDiv>
+      {Object.keys(price).map(el => <EachPrice coinName={el} />)}
+    </MainDiv>
   );
 }

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import styled from "styled-components";
 import CoinContext from "../Context/CoinContext";
 
@@ -94,10 +94,10 @@ let InputValue = styled.div`
 `
 
 export default function Forms() {
-
-  let { Coin, transactionValues, holdings, wallet, doneTransaction } = useContext(CoinContext)
-  let { form, coinName, name } = transactionValues[0]
-  let current_price = Coin[coinName] ? Coin[coinName].current_price : 0
+  
+  let { price, transactionValues, holdings, wallet, doneTransaction } = useContext(CoinContext)
+  let { form, coinName, name } = transactionValues[0]   // coinName is 'ethereum','dogecoin','bitcoin'. name is 'Ethereum', 'Dogecoin', and 'Bitcoin'
+  let current_price = price[coinName] ? price[coinName].current_price : 0  // this is just for newly reload, because price is empty when not fetched yet and would cause error if we access current_price of empty object
 
   let [valid, setValid] = useState(false);
   let [type, setType] = useState("Buy");
@@ -127,7 +127,7 @@ export default function Forms() {
     setValid(false);
   }
 
-  function submit() {
+  function submit() { // organized the submit function and added functioning wallet
     if (!valid) return;
     let tempHolding = JSON.parse(JSON.stringify(holdings[0]));
     let quantity = Number(inputRef.current.value);

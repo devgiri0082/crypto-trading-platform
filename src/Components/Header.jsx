@@ -22,14 +22,13 @@ let Portfolio = styled(Title)`
     font-size: 30px;
 `
 export default function Header() {
-    let { Coin, wallet, holdings } = useContext(CoinContext);
+    let { price, wallet, holdings } = useContext(CoinContext);
     return (
         <Heading>
             <Title>Earn some virtual money 💰</Title>
             <Message>To buy virtual food🍕</Message>
             <Money>🏦 Wallet: ${wallet[0].toFixed(2)}</Money>
-            <Portfolio>Portfolio Value: ${Object.entries(holdings[0]).reduce((acc, elem) => acc + elem[1].quantity * Coin[elem[0]].current_price, 0).toFixed(2)}</Portfolio>
-            <Portfolio></Portfolio>
+            <Portfolio>Portfolio Value: ${Object.entries(holdings[0]).reduce((acc, elem) => acc + elem[1].quantity * (price[elem[0]] ? price[elem[0]].current_price : 0), 0).toFixed(2)}</Portfolio>
         </Heading>
     )
 }
