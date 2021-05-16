@@ -63,10 +63,6 @@ let FormBody = styled.div`
     font-size: 13.7px;
   }
 
-  label p {
-    cursor: pointer;
-  }
-
   .amt {
     height: 2.5em;
     padding: 0em 0.5em;
@@ -84,27 +80,40 @@ let FormBody = styled.div`
   }
 `;
 
+let InputValue = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  .max {
+    cursor: pointer;
+  }
+
+  .total {
+    font-size: 0.7rem;
+  }
+`
+
 export default function Forms() {
 
   let { Coin, transactionValues, holdings, wallet, doneTransaction } = useContext(CoinContext)
   let { form, coinName, name } = transactionValues[0]
   let current_price = Coin[coinName] ? Coin[coinName].current_price : 0
 
-  let [valid, setValid] = useState(false); // former click, setClick
+  let [valid, setValid] = useState(false);
   let [type, setType] = useState("Buy");
   let [total, setTotal] = useState(0);
 
-  let inputRef = useRef() // replaced inputValue state with a ref
+  let inputRef = useRef()
 
-  function checkValue() {  // former setButton function
-    let value = inputRef.current.value
+  function checkValue() { 
+    let quantity = inputRef.current.value
     let totalCan = (maxBuy().toFixed(10));
-    if (Number(value) <= 0 || value === '') {
+    if (Number(quantity) <= 0) {
       setValid(false);
       return;
     }
-    totalCan < (value === "" ? 0 : Number(value)) ? setValid(false) : setValid(true);
-    setTotal(value * current_price)
+    totalCan < (quantity === "" ? 0 : Number(quantity)) ? setValid(false) : setValid(true);
+    setTotal(quantity * current_price)
   }
 
   function maxBuy() {
@@ -119,20 +128,28 @@ export default function Forms() {
   }
 
   function submit() {
-    let quantity = Number(inputRef.current.value);
     if (!valid) return;
-    let state = type === "Buy" ? "Bought" : "Sold";
-    //reflecting the buy or sell on transactions
-    doneTransaction[1]([...doneTransaction[0], [state, name, inputRef.current.value, current_price, (new Date()).toLocaleString()]]);
     let tempHolding = JSON.parse(JSON.stringify(holdings[0]));
-    //changing the holding to reflect the changes on currentHolding not perfect
-    tempHolding[coinName].quantity = type === 'Buy' ? tempHolding[coinName].quantity + quantity : tempHolding[coinName].quantity - quantity;
-    tempHolding[coinName].boughtPriceTotal = type === 'Buy' ? tempHolding[coinName].boughtPriceTotal + (quantity * current_price) : tempHolding[coinName].boughtPriceTotal - (quantity * current_price)
+    let quantity = Number(inputRef.current.value);
+    if (type === 'Buy') {
+      doneTransaction[1]([...doneTransaction[0], ["Bought", name, inputRef.current.value, current_price, (new Date()).toLocaleString()]]);
+      tempHolding[coinName].quantity += quantity
+      tempHolding[coinName].boughtPriceTotal += (quantity * current_price)
+      wallet[1]((p) => p - (quantity * current_price))
+    }
+    else if (type === 'Sell') {
+      doneTransaction[1]([...doneTransaction[0], ["Sold", name, inputRef.current.value, current_price, (new Date()).toLocaleString()]]);
+      tempHolding[coinName].quantity -= quantity
+      tempHolding[coinName].boughtPriceTotal -= (quantity * current_price)
+      wallet[1]((p) => p + (quantity * current_price))
+    }
     holdings[1](tempHolding);
   }
 
   function placeMax() {
-    inputRef.current.value = parseFloat(maxBuy().toFixed(8))
+    let max = parseFloat(maxBuy().toFixed(8))
+    inputRef.current.value = max
+    setTotal(max * current_price)
     setValid(true)
   }
 
@@ -145,10 +162,18 @@ export default function Forms() {
         </Header>
         <FormBody>
           <p>Current Price: ${current_price}</p>
-          <label>
-            <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue} />
-            <p onClick={placeMax}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p>
-          </label>
+          <InputValue>
+            <label>
+              <input name="quantity" type="number" min="0" className="amt" placeholder={0} ref={inputRef} onChange={checkValue} />
+              <p className='max' onClick={placeMax}>{`Max: ${parseFloat(maxBuy().toFixed(8))}`}</p>
+            </label>
+            {valid &&
+              <p className='total' >You will {type === 'Buy' ? 'be charged ' : 'receive '} ${total.toFixed(2)}</p>
+            }
+            {!valid &&
+              <p className='total' >Please enter a valid quantity</p>
+            }
+          </InputValue>
           <label>
             <input type="radio" name="type" value="Buy" onChange={() => {
               setType('Buy')

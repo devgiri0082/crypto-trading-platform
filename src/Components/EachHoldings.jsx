@@ -17,7 +17,7 @@ let Quantity = styled.div`
 export default function EachHoldings({ coinName }) {
     let { Coin, holdings } = useContext(CoinContext)
     let { quantity, boughtPriceTotal } = holdings[0][coinName]
-    let { current_price } = Coin[coinName] ? Coin[coinName].current_price : 0
+    let current_price = Coin[coinName] ? Coin[coinName].current_price : 0
     // let totalPaid = quantity * boughtPrice;   =======> removed this because brought price would be different each transaction so we should just store the total in the context
     let currentValue = quantity * current_price;
     return (
