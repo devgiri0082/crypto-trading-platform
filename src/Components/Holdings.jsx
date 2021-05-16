@@ -47,23 +47,21 @@ let NoHoldings = styled.div`
 
 export default function Holdings() {
   let { holdings } = useContext(CoinContext);
-  let holdingSum = Object.values(holdings[0]).reduce( // to show empty state of holdings when there's no holdings yet
+  let holdingSum = Object.values(holdings[0]).reduce(
     (acc, val) => (acc += val.quantity),
     0
   );
   return (
     <Box>
       <Title>Current Holdings</Title>
-      {holdingSum === 0 && <NoHoldings>Go buy some ↗↗</NoHoldings>}
-      {holdingSum !== 0 && (
-        <HoldingList>
-          {Object.keys(holdings[0]).map((elem) => (
-            <EachHoldings coinName={elem} />
-          ))}
-          {/* I'm changing the Object.entries to Object.keys, object.keys will give the coin name (elem[0] in entries) 
-                so we know which coin elem is and just access the context in eachHoldings */}
-        </HoldingList>
-      )}
+      {holdingSum === 0 ? <NoHoldings>Go buy some ↗↗</NoHoldings> :
+        (
+          <HoldingList>
+            {Object.keys(holdings[0]).map((elem, index) => (
+              <EachHoldings coinName={elem} key={index} />
+            ))}
+          </HoldingList>
+        )}
     </Box>
   );
 }

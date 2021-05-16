@@ -36,13 +36,13 @@ export default function EachHoldings({ coinName }) {
     let pl = parseFloat((currentValue - boughtPriceTotal).toFixed(3)) // still not sure how to compute P/L
     return (
         <>
-        {quantity > 0 &&
-            <Box>
-                <Quantity>{`${price[coinName].name}: ${quantity}`}</Quantity>
-                <Quantity>{`Total Paid: $${boughtPriceTotal.toFixed(2)}, Current Value: $${currentValue.toFixed(2)}`}</Quantity>
-                <Quantity className={pl >= 0 ? 'positive' : 'negative'}>{`P/L: ${pl + (pl >= 0 ? ' 🚀' : ' ▼' )}`}</Quantity>
-            </Box>
-        }
+            {quantity > 0 &&
+                <Box>
+                    <Quantity>{`${price[coinName].name}: ${quantity}`}</Quantity>
+                    <Quantity>{`Total Paid: $${boughtPriceTotal.toFixed(2)}, Current Value: $${currentValue.toFixed(2)}`}</Quantity>
+                    <Quantity className={pl >= 0 ? 'positive' : 'negative'}>{`P/L: ${pl + (pl >= 0 ? ' 🚀' : ' ▼')}`}</Quantity>
+                </Box>
+            }
         </>
     )
 }

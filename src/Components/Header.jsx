@@ -27,8 +27,8 @@ export default function Header() {
         <Heading>
             <Title>Earn some virtual money 💰</Title>
             <Message>To buy virtual food🍕</Message>
-            <Money>🏦 Wallet: ${wallet[0].toFixed(2)}</Money>
-            <Portfolio>Portfolio Value: ${Object.entries(holdings[0]).reduce((acc, elem) => acc + elem[1].quantity * (price[elem[0]] ? price[elem[0]].current_price : 0), 0).toFixed(2)}</Portfolio>
+            <Money>{Object.keys(price).length > 0 ? `🏦 Wallet: $ ${wallet[0].toFixed(2)}` : "Wallet Loading..."}</Money>
+            {Object.keys(price).length === 0 ? <Portfolio style={{ fontSize: "20px" }}>Portfolio Loading...</Portfolio> : <Portfolio>Portfolio Value: ${Object.entries(holdings[0]).reduce((acc, elem) => acc + elem[1].quantity * (price[elem[0]] ? price[elem[0]].current_price : 0), 0).toFixed(2)}</Portfolio>}
         </Heading>
     )
 }

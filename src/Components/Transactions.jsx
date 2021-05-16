@@ -48,14 +48,14 @@ export default function Transactions() {
   return (
     <MainDiv>
       <h1>Transactions</h1>
-      {doneTransaction[0].length !== 0 && (
+      {doneTransaction[0].length !== 0 ? (
         <TransactionList>
-          {doneTransaction[0].map((elem, i) => (
-            <EachTransactions index={i} />
+          {doneTransaction[0].map((elem, index) => (
+            <EachTransactions index={index} key={index} />
           ))}
         </TransactionList>
-      )}
-      {doneTransaction[0].length === 0 && (<NoTransaction>So empty...</NoTransaction>)}
+      )
+        : (<NoTransaction>So empty...</NoTransaction>)}
     </MainDiv>
   );
 }

@@ -94,10 +94,10 @@ let InputValue = styled.div`
 `
 
 export default function Forms() {
-  
+
   let { price, transactionValues, holdings, wallet, doneTransaction } = useContext(CoinContext)
-  let { form, coinName, name } = transactionValues[0]   // coinName is 'ethereum','dogecoin','bitcoin'. name is 'Ethereum', 'Dogecoin', and 'Bitcoin'
-  let current_price = price[coinName] ? price[coinName].current_price : 0  // this is just for newly reload, because price is empty when not fetched yet and would cause error if we access current_price of empty object
+  let { form, coinName, name } = transactionValues[0]
+  let current_price = price[coinName] ? price[coinName].current_price : 0
 
   let [valid, setValid] = useState(false);
   let [type, setType] = useState("Buy");
@@ -105,7 +105,7 @@ export default function Forms() {
 
   let inputRef = useRef()
 
-  function checkValue() { 
+  function checkValue() {
     let quantity = inputRef.current.value
     let totalCan = (maxBuy().toFixed(10));
     if (Number(quantity) <= 0) {
@@ -127,7 +127,7 @@ export default function Forms() {
     setValid(false);
   }
 
-  function submit() { // organized the submit function and added functioning wallet
+  function submit() {
     if (!valid) return;
     let tempHolding = JSON.parse(JSON.stringify(holdings[0]));
     let quantity = Number(inputRef.current.value);
@@ -144,6 +144,7 @@ export default function Forms() {
       wallet[1]((p) => p + (quantity * current_price))
     }
     holdings[1](tempHolding);
+    hideForm();
   }
 
   function placeMax() {

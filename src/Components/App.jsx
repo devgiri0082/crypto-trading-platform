@@ -27,72 +27,59 @@ let Bottom = styled.div`
 `;
 
 export default function App() {
-  const API =
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
+    const API =
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin";
 
-  let [prices, setPrices] = useState({});
-  let [wallet, setWallet] = useState(100);
-  let [holding, setHolding] = useState({
-    dogecoin: { quantity: 0, boughtPriceTotal: 0 }, // remove current price, we only storing quantity and how much it was bought
-    bitcoin: { quantity: 0, boughtPriceTotal: 0 }, // the current price we will display would be from the price context
-    ethereum: { quantity: 0, boughtPriceTotal: 0 },
-  });
-  let [transactionValues, setTransactionValues] = useState({ form: "hidden" });
-  let [doneTransaction, setDoneTransaction] = useState([]);
+    let [prices, setPrices] = useState({});
+    let [wallet, setWallet] = useState(100);
+    let [holding, setHolding] = useState({
+        dogecoin: { quantity: 0, boughtPriceTotal: 0 },
+        bitcoin: { quantity: 0, boughtPriceTotal: 0 },
+        ethereum: { quantity: 0, boughtPriceTotal: 0 },
+    });
+    let [transactionValues, setTransactionValues] = useState({ form: "hidden" });
+    let [doneTransaction, setDoneTransaction] = useState([]);
 
-  async function getPrices() {
-    let response = await fetch(API);
-    let data = await response.json();
-    let temp = {};
-    data.forEach(
-      (el) =>
-        (temp[el.id] = {
-          name: el.name,
-          current_price: el.current_price,
-          market_cap: el.market_cap_change_percentage_24h.toFixed(5),
-          image: el.image,
-        })
+    async function getPrices() {
+        let response = await fetch(API);
+        let data = await response.json();
+        let temp = {};
+        data.forEach(
+            (el) =>
+            (temp[el.id] = {
+                name: el.name,
+                current_price: el.current_price,
+                market_cap: el.market_cap_change_percentage_24h.toFixed(5),
+                image: el.image,
+            })
+        );
+        setPrices(temp);
+    }
+
+    useEffect(() => {
+        let refreshPrice = setInterval(() => getPrices(), 3000);
+        return () => clearInterval(refreshPrice);
+    }, []);
+
+    return (
+        <CoinContext.Provider
+            value={{
+                price: prices,
+                wallet: [wallet, setWallet],
+                holdings: [holding, setHolding],
+                transactionValues: [transactionValues, setTransactionValues],
+                doneTransaction: [doneTransaction, setDoneTransaction],
+            }}
+        >
+            <Container>
+                <Forms />
+                <Header />
+                <Price />
+                <Bottom>
+                    <Holdings />
+                    <Transactions />
+                </Bottom>
+            </Container>
+        </CoinContext.Provider>
     );
-    setPrices(temp);
-  }
-
-  // function changeHolding() {                            =========> removed this because we won't store current price in holdings anymore
-  //     let values = JSON.parse(JSON.stringify(holding));
-  //     for (let coin in prices) {
-  //         let lowerValue = coin.toLowerCase();
-  //         values[lowerValue].currentPrice = prices[coin].current_price;
-  //     }
-  //     setHolding(values);
-  // }
-
-  // useEffect(() => {
-  //     changeHolding();
-  // }, [prices])
-
-  useEffect(() => {
-    let refreshPrice = setInterval(() => getPrices(), 3000);
-    return () => clearInterval(refreshPrice);
-  }, []);
-
-  return (
-    <CoinContext.Provider
-      value={{
-        price: prices, // ==========> changed 'Coin' property to 'price'
-        wallet: [wallet, setWallet],
-        holdings: [holding, setHolding],
-        transactionValues: [transactionValues, setTransactionValues],
-        doneTransaction: [doneTransaction, setDoneTransaction],
-      }}
-    >
-      <Container>
-        <Forms />
-        <Header />
-        <Price />
-        <Bottom>
-          <Holdings />
-          <Transactions />
-        </Bottom>
-      </Container>
-    </CoinContext.Provider>
-  );
 }
