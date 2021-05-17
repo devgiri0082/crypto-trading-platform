@@ -12,7 +12,7 @@ let MainDiv = styled.div`
     
     &, .loading {
       font-size: 25px;
-      width: 100%;
+      width: 90%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,9 +20,7 @@ let MainDiv = styled.div`
 
     .loading {
       height: 100px;
-      box-shadow: 1px 1px 5px rgb(182, 181, 181);
       border-radius: 10px;
-      background-color: white;
       color: #353535;
     }
 `
